@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактировать список задач</title>
+</head>
+<body>
+  <form id="todolistForm">
+    <label for="title">Введите название: </label>
+    <input type="text" id="title"/>
+    <br/>
+    <input type="submit" value="Редактировать" onclick="updateTodolist(event)"/>
+  </form>
+  <a th:href="@{/api/todolist}">На главную</a>
+  <input type="hidden" id="todolistId" th:value="${todolist.getId()}" />
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    function updateTodolist(event) {
+        var todolistId = document.getElementById("todolistId").value;
+        var titleValue = document.getElementById("title").value;
+        var dataToSend = {
+            title: titleValue
+        };
+        var requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        };
+        var apiUrl = '/api/todolist/' + todolistId;
+        fetch(apiUrl, requestOptions);
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Статистика</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <div>
+        <a th:href="@{/api/todolist}">На главную</a>
+        <br>
+        <h1>Смотреть статистику за: </h1>
+        <ul>
+            <li><a th:href="@{/api/statistic/info/{period}(period=month)}">month</a></li>
+            <li><a th:href="@{/api/statistic/info/{period}(period=week)}">week</a></li>
+        </ul>
+    </div>
+    <div>
+        <div>
+            <h3>Среднее время выполнения задачи за <span th:text="${statistic.getNamePeriod()}"></span>: <span th:text="${statistic.getAvgTimeCompleteTask()}"></span></h3>
+            <h3>Количество всех созданных задач за <span th:text="${statistic.getNamePeriod()}"></span>: <span th:text="${statistic.getCountMadeTask()}"></span></h3>
+            <h3>Количество выполненных задач за <span th:text="${statistic.getNamePeriod()}"></span>: <span th:text="${statistic.getCountCompletedTask()}"></span></h3>
+            <h3>Количество просроченных и не выполненных задач за <span th:text="${statistic.getNamePeriod()}"></span>: <span th:text="${statistic.getCountPastTask()}"></span></h3>
+            <div th:if="${!statistic.getTodolistDtoLists().isEmpty()}">
+                <h3>Завершенные todolist за <span th:text="${statistic.getNamePeriod()}"></span>: </h3>
+                <u>
+                    <li th:each="todolist : ${statistic.getTodolistDtoLists()}">
+                        <span th:text="${todolist.getTitle()}" ></span>
+                    </li>
+                </u>
+            </div>
+            <div th:if="${statistic.getTodolistDtoLists().isEmpty()}">
+                <h3>Завершенные todolist за <span th:text="${statistic.getNamePeriod()}"></span>: - </h3>
+            </div>
+        </div>
+        <div>
+            <div>
+<!--                <h2>Доли выполненных задач до дедлайна и после</h2>-->
+                <div id="chart_div"></div>
+                <div id="piechart" ></div>
+            </div>
+            <script th:inline="javascript">
+            var real_data = /*[[${chartData}]]*/'noValue';
+
+            $(document).ready(function() {
+                google.charts.load('current', {
+                    packages : [ 'corechart', 'bar' ]
+                });
+
+                google.charts.setOnLoadCallback(drawPieChart);
+            });
+
+            function drawPieChart() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Count');
+                data.addColumn('number', 'Views');
+                Object.keys(real_data).forEach(function(key) {
+                    data.addRow([ key, real_data[key] ]);
+                });
+                var options = {
+                    title : 'Доли выполненных задач до дедлайна и после'
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+                chart.draw(data, options);
+            }
+             </script>
+        </div>
+    </div>
+</body>
+</html>

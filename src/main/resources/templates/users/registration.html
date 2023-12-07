@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration</title>
+</head>
+<body>
+  <form id="registrationForm">
+    <label for="username">Введите имя пользователя: </label>
+    <input type="text" id="username"/>
+    <div style="color:red" id="usernameError"></div>
+    <br/>
+    <label for="password">Введите пароль: </label>
+    <input type="password" id="password"/>
+    <div style="color:red" id="passwordError"></div>
+    <br/>
+    <label for="email">Введите почту: </label>
+    <input type="email" id="email"/>
+    <div style="color:red" id="emailError"></div>
+    <br/>
+    <input type="submit" value="Зарегистрироваться" onclick="registerUser(event)"/>
+  </form>
+  <br>
+  <a th:href="@{/login}">Войти</a>
+  <div id="errorDisplay" style="color: red;"></div>
+  <script th:inline="javascript">
+    function registerUser(event) {
+<!--        event.preventDefault();-->
+        errorDisplay.textContent="";
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var email = document.getElementById("email").value;
+
+        var dataToSend = {
+            username: username,
+            password: password,
+            email: email
+        };
+
+        var requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        };
+        var apiUrl = '/registration';
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(JSON.stringify(errorData));
+                    });
+                }
+                return response.status;
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                var errorDisplay = document.getElementById("errorDisplay");
+                errorDisplay.textContent = error.message;
+            });
+    }
+</script>
+</body>
+</html>

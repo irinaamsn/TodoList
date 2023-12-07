@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактировать задачу</title>
+</head>
+<body>
+  <form>
+    <label for="title">Введите название: </label>
+    <input type="text" id="title" />
+    <br/>
+    <label for="details">Введите описание: </label>
+    <input type="text" id="details" />
+    <br/>
+    <label for="deadline">Установите дедлайн:</label>
+    <input type="datetime-local" id="deadline" />
+    <br/>
+    <input type="submit" value="Создать" onclick="editTask(event)"/>
+  </form>
+  <input type="hidden" id="taskId" th:value="${task.getId()}" />
+  <a th:href="@{/api/todolist}">На главную</a>
+  <script th:inline="javascript">
+     /*<![CDATA[*/
+      function editTask(event) {
+          var taskId = document.getElementById("taskId").value;
+          var titleValue = document.getElementById("title").value;
+          var detailsValue = document.getElementById("details").value;
+          var deadlineValue = document.getElementById("deadline").value;
+          var dataToSend = {
+              title: titleValue,
+              details: detailsValue,
+              deadline: deadlineValue
+          };
+          var requestOptions = {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(dataToSend)
+          };
+          var apiUrl = '/api/task/' + taskId;
+          fetch(apiUrl, requestOptions);
+      }
+      /*]]>*/
+  </script>
+</body>
+</html>

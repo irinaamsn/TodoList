@@ -1,0 +1,66 @@
+version: '3.3'
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    env_file: docker.env
+
+  db:
+    image: postgres:latest
+    container_name: db
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    env_file: docker.env
+    volumes:
+      - postgres-data:/var/lib/postgres/data
+
+  sender:
+    image: sender:latest
+    container_name: sender
+    expose:
+      - "2020"
+    ports:
+      - "2020:2020"
+    env_file: docker.env
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+
+  statistic:
+    image: statistic:latest
+    container_name: statistic
+    expose:
+      - "8081"
+    ports:
+      - "8081:8081"
+    env_file: docker.env
+    depends_on:
+      - db
+      - rabbitmq
+
+  todolist:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: todolist
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    env_file: docker.env
+    links:
+      - statistic
+    depends_on:
+      - db
+
+volumes:
+  postgres-data:
+
+

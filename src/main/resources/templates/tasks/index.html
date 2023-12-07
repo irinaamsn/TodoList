@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Задачи</title>
+</head>
+<body>
+<hr/>
+<div th:if="${!tasks.isEmpty()}">
+  <div>
+    <span th:text="${todolist.getTitle()}"></span>
+    <ul>
+      <li th:each="elem : ${tasks}">
+        <div th:if="${!elem.isCompleted()}">
+          <a id="completedCheckbox" th:href="@{/api/task/{id}/show(id=${elem.getId()})}">
+            <span th:text="${elem.getTitle()}  "  th:style="${elem.isCompleted()} ? 'color: green' : 'color: red'"></span>
+          </a>
+          <form th:method="PUT" th:action="@{/api/task/complete/{id}(id=${elem.getId()})}">
+            <input type="submit" value="Завершить"/>
+          </form>
+        </div>
+        <div th:if="${elem.isCompleted()}">
+          <a  th:href="@{/api/task/{id}/show(id=${elem.getId()})}">
+            <span th:text="${elem.getTitle()}" th:style="${elem.isCompleted()} ? 'color: green' : 'color: red'"></span>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div th:if="${tasks.isEmpty()}">
+  <p>Задачи не созданы</p>
+  <hr/>
+</div>
+<a th:href="@{/api/task/{id}/new(id=${todolist.getId()})}">Создать задачу</a>
+<br>
+<a th:href="@{/api/todolist}">На главную</a>
+</body>
+</html>

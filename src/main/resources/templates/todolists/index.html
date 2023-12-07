@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои списки</title>
+</head>
+  <body>
+   <span>Добро пожаловать, </span><span th:text="${username}">VALUE</span>
+   <p><a th:href="@{/api/statistic/info/{period}(period=month)}">Получить статистику </a></p>
+   <form th:action="@{/logout}" th:method="POST">
+       <input type="submit" value="Выйти">
+   </form>
+    <hr/>
+    <div th:if="${!todolists.isEmpty()}">
+      <h1>Мои списки</h1>
+      <ul>
+        <li th:each="todolist : ${todolists}">
+          <span th:text="${todolist.getTitle()}"></span>
+          <a th:href="@{/api/task/{id}(id=${todolist.getId()})}">Просмотреть задачи</a>
+          <form th:method="GET" th:action="@{/api/todolist/{id}/edit(id=${todolist.getId()})}">
+            <input type="submit" value="Редактировать"/>
+          </form>
+          <form th:method="DELETE" th:action="@{/api/todolist/{id}(id=${todolist.getId()})}">
+            <input type="submit" value="Удалить"/>
+          </form>
+        </li>
+      </ul>
+    </div>
+    <div th:if="${todolists.isEmpty()}">
+      <p>Пусто</p>
+      <hr/>
+    </div>
+    <a th:href="@{/api/todolist/new}">Создать новый список задач</a>
+  </body>
+</html>

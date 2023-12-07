@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Задача</title>
+</head>
+<body>
+    <h2 th:text="${task.getTitle()}"></h2>
+    <div class="task-details">
+        <span>Описание: </span><span th:text="${task.getDetails()}"></span><br/><hr/>
+        <span>Дедлайн: </span><span th:text="${task.getDeadline()}"></span><br/><hr/>
+        <span>Время последнего обновления задачи: </span><span th:text="${task.getDateTimeLastChange()}"></span>
+    </div>
+    <form th:method="GET" th:action="@{/api/task/{id}/edit(id=${task.getId()})}">
+        <input type="submit" value="Редактировать"/>
+    </form>
+    <form th:method="DELETE" th:action="@{/api/task/{id}(id=${task.getId()})}">
+        <input type="submit" value="Удалить"/>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Создать список задач</title>
+</head>
+<body>
+  <form id="todolistForm">
+    <label for="title">Введите название: </label>
+    <input type="text" id="title"/>
+    <br/>
+    <input type="submit" value="Создать" onclick="submitForm(event)"/>
+  </form>
+  <a th:href="@{/api/todolist}">На главную</a>
+  <input type="hidden" id="redirectUrl" th:value="@{/api/todolist}" />
+  <div id="errorDisplay" style="color: red;"></div>
+  <script th:inline="javascript">
+  /*<![CDATA[*/
+  function submitForm(event) {
+    errorDisplay.textContent="";
+    var titleValue = document.getElementById("title").value;
+    var dataToSend = {
+      title: titleValue
+    };
+    var requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+    };
+    var apiUrl = /*[[@{/api/todolist}]]*/ '';
+     fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(JSON.stringify(errorData));
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                var errorDisplay = document.getElementById("errorDisplay");
+                errorDisplay.textContent = error.message;
+            });
+  }
+  /*]]>*/
+  </script>
+</body>
+</html>

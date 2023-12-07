@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/entities/user.role.xml
+  - include:
+      file: db/changelog/entities/task.todolist.xml
+  - include:
+      file: db/changelog/data/data.role.xml
+  - include:
+      file: db/changelog/data/data.user.admin.xml
+  - include:
+      file: db/changelog/data/data.user-role.xml

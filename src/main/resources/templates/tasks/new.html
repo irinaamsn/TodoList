@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Создать новую задачу</title>
+</head>
+<body>
+  <form id="taskForm">
+    <label for="title">Введите название: </label>
+    <input type="text" id="title" />
+    <br/>
+    <label for="details">Введите описание: </label>
+    <input type="text" id="details" />
+    <br/>
+    <label for="deadline">Установите дедлайн:</label>
+    <input type="datetime-local" id="deadline" />
+    <br/>
+    <input type="submit" value="Создать" onclick="createTask(event)"/>
+  </form>
+  <input type="hidden" id="todolistId" th:value="${todolist.getId()}" />
+  <a th:href="@{/api/task/{id}(id=${todolist.getId()})}">К спискам задач</a>
+  <script th:inline="javascript">
+   /*<![CDATA[*/
+    function createTask(event) {
+        var todolistId = document.getElementById("todolistId").value;
+        var titleValue = document.getElementById("title").value;
+        var detailsValue = document.getElementById("details").value;
+        var deadlineValue = document.getElementById("deadline").value;
+        var dataToSend = {
+            title: titleValue,
+            details: detailsValue,
+            deadline: deadlineValue
+        };
+        var requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        };
+        var apiUrl = '/api/task/' + todolistId;
+        fetch(apiUrl, requestOptions);
+    }
+    /*]]>*/
+  </script>
+</body>
+</html>

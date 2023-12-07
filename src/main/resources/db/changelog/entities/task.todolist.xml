@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="20231010create-todolist-table" author="irina.msn">
+        <createTable tableName="todolist">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="user_id" referencedTableName="app_user"
+                             referencedColumnNames="id" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="20231010create-task-table" author="irina.msn">
+        <createTable tableName="task">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="details" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_time_last_change" type="timestamp ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_time_created" type="timestamp ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deadline" type="timestamp ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_completed" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="todolist_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="todolist_id" referencedTableName="todolist"
+                             referencedColumnNames="id" />
+            </column>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="user_id" referencedTableName="app_user"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
