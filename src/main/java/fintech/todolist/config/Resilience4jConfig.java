@@ -11,18 +11,9 @@ import java.time.Duration;
 @Configuration
 public class Resilience4jConfig {
     @Bean
-    public RateLimiterConfig rateLimiterConfig() {
-        return RateLimiterConfig.custom()
-                .limitForPeriod(1000000)
-                .limitRefreshPeriod(Duration.ofDays(30))
-                .timeoutDuration(Duration.ofMillis(100))
-                .build();
-    }
-
-    @Bean
     public RateLimiter userResurcesRateLimiter(RateLimiterRegistry rateLimiterRegistry) {
         RateLimiterConfig config = RateLimiterConfig.custom()
-                .limitForPeriod(5)
+                .limitForPeriod(15)
                 .limitRefreshPeriod(Duration.ofMinutes(1))
                 .timeoutDuration(Duration.ofMillis(100))
                 .build();
@@ -34,8 +25,4 @@ public class Resilience4jConfig {
         return RateLimiterRegistry.of(rateLimiterConfig);
     }
 
-    @Bean
-    public RateLimiter rateLimiter(RateLimiterRegistry rateLimiterRegistry) {
-        return rateLimiterRegistry.rateLimiter("statisticApi");
-    }
 }

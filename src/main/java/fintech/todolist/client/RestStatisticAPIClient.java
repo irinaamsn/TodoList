@@ -43,7 +43,7 @@ public class RestStatisticAPIClient {
         this.userService = userService;
     }
 
-    @RateLimiter(name = "statisticApi")
+    @RateLimiter(name = "userRateLimiter")
     public Optional<StatisticDto> getStatisticUserByUserId(UUID userId, String period) {
         ResponseEntity<StatisticApiResponse> response = restTemplate.exchange(
                 createUrl(userId, period),
